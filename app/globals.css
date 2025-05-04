@@ -25,3 +25,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Hide Next.js debug overlay icon */
+.nextjs-toastify-toast-container,
+.__nextjs-dev-overlay {
+  display: none !important;
+}
