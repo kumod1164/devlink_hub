@@ -8,7 +8,7 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    // TODO: Call your backend register endpoint
+   
     alert("Register logic to be added");
   };
 
