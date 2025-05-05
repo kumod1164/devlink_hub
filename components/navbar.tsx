@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function Navbar() {
+  const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -48,18 +50,18 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <NavLink href="/features">Features</NavLink>
+            {/* <NavLink href="/features">Features</NavLink>
             <NavLink href="/developers">Developers</NavLink>
             <NavLink href="/companies">Companies</NavLink>
-            <NavLink href="/pricing">Pricing</NavLink>
+            <NavLink href="/pricing">Pricing</NavLink> */}
           </nav>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="text-slate-700 hover:text-teal-700">
+            <Button variant="ghost" className="text-slate-700 hover:text-teal-700" onClick={() => router.push("/auth" )}>
               Log In
             </Button>
-            <Button className="bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white">
+            <Button className="bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white" onClick={() => router.push("/auth")}>
               Sign Up
             </Button>
           </div>
@@ -82,7 +84,7 @@ export default function Navbar() {
             transition={{ duration: 0.3 }}
           >
             <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
-              <MobileNavLink href="/features" onClick={() => setIsMobileMenuOpen(false)}>
+              {/* <MobileNavLink href="/features" onClick={() => setIsMobileMenuOpen(false)}>
                 Features
               </MobileNavLink>
               <MobileNavLink href="/developers" onClick={() => setIsMobileMenuOpen(false)}>
@@ -93,12 +95,12 @@ export default function Navbar() {
               </MobileNavLink>
               <MobileNavLink href="/pricing" onClick={() => setIsMobileMenuOpen(false)}>
                 Pricing
-              </MobileNavLink>
+              </MobileNavLink> */}
               <div className="pt-4 flex flex-col space-y-3">
-                <Button variant="outline" className="w-full justify-center">
+                <Button variant="outline" className="w-full justify-center" onClick={() => router.push("/auth")}>
                   Log In
                 </Button>
-                <Button className="w-full justify-center bg-gradient-to-r from-teal-500 to-teal-700">Sign Up</Button>
+                <Button className="w-full justify-center bg-gradient-to-r from-teal-500 to-teal-700" onClick={() => router.push("/auth")}>Sign Up</Button>
               </div>
             </div>
           </motion.div>
