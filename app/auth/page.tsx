@@ -52,16 +52,19 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage("")
+  const handleSubmit = async () => {
+    setLoading(true);
+    setMessage("");
   
-    const isEmailValid = validateEmail(email)
-    const isPasswordValid = validatePassword(password)
+    // Log the form data before submitting
+    console.log("Form Data Submitted:", { name, email, password });
+  
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(password);
     if (!isEmailValid || !isPasswordValid) {
-      setLoading(false)
-      return
+      setLoading(false);
+      console.log("Validation failed"); // Log if validation fails
+      return;
     }
   
     if (isLogin) {
@@ -71,46 +74,56 @@ export default function AuthPage() {
         email,
         password,
         callbackUrl: "/console",
-      })
+      });
   
       if (res?.ok) {
-        setMessage("Login successful. Redirecting...")
-        window.location.href = res.url || "/console"
+        setMessage("Login successful. Redirecting...");
+        window.location.href = res.url || "/console";
       } else {
-        setMessage("Invalid email or password.")
+        setMessage("Invalid email or password.");
       }
     } else {
       // 👉 SIGNUP FLOW
       try {
+        console.log("Making API call to /api/register..."); // Log before API call
         const res = await fetch("/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, password }),
-        })
+        });
   
-        const data = await res.json()
+        console.log("API Response Status:", res.status); // Log status code
+  
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error("Error Response:", errorData); // Log error response
+          setMessage(errorData.error || "Something went wrong.");
+          return;
+        }
+  
+        const data = await res.json();
+        console.log("API Response Data:", data); // Log success response
   
         if (res.ok) {
-          setMessage("Registered successfully. Redirecting to dashboard...")
+          setMessage("Registered successfully. Redirecting to dashboard...");
           setTimeout(() => {
             signIn("credentials", {
               email,
               password,
               callbackUrl: "/console",
-            })
-          }, 2000)
+            });
+          }, 2000);
         } else {
-          setMessage(data.error || "Something went wrong.")
+          setMessage(data.error || "Something went wrong.");
         }
       } catch (err) {
-        console.error("❌ Register failed:", err)
-        setMessage("Something went wrong. Try again.")
+        console.error("❌ Register failed:", err);
+        setMessage("Something went wrong. Try again.");
       }
     }
   
-    setLoading(false)
-  }
-  
+    setLoading(false);
+  };
 
   const passwordStrength = () => {
     if (password.length === 0) return 0
@@ -223,7 +236,7 @@ export default function AuthPage() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
               <AnimatePresence mode="wait">
                 {!isLogin && (
                   <motion.div
@@ -380,12 +393,11 @@ export default function AuthPage() {
               </div>
 
               <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white shadow-md hover:shadow-lg transition-shadow"
+                onClick={handleSubmit}
               >
                 {isLogin ? "Log In" : "Create Account"}
               </Button>
-            </form>
+            </div>
 
             <div className="mt-6">
               <div className="relative">
