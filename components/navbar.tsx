@@ -58,11 +58,11 @@ export default function Navbar() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="text-slate-700 hover:text-teal-700" onClick={() => router.push("/auth" )}>
+            {/* <Button variant="ghost" className="text-slate-700 hover:text-teal-700" onClick={() => router.push("/auth" )}>
               Log In
-            </Button>
+            </Button> */}
             <Button className="bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white" onClick={() => router.push("/auth")}>
-              Sign Up
+              Log In
             </Button>
           </div>
 
@@ -98,7 +98,7 @@ export default function Navbar() {
               </MobileNavLink> */}
               <div className="pt-4 flex flex-col space-y-3">
                 <Button variant="outline" className="w-full justify-center" onClick={() => router.push("/auth")}>
-                  Log In
+                  Log In 
                 </Button>
                 <Button className="w-full justify-center bg-gradient-to-r from-teal-500 to-teal-700" onClick={() => router.push("/auth")}>Sign Up</Button>
               </div>
