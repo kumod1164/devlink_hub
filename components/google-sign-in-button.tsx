@@ -1,6 +1,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { signIn } from "next-auth/react"
 
 export default function GoogleSignInButton() {
   const [isLoading, setIsLoading] = useState(false)
@@ -11,7 +12,8 @@ export default function GoogleSignInButton() {
       // Here you would implement Google OAuth
       console.log("Google sign in clicked")
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await signIn("google", { callbackUrl: "/console" });
+
     } catch (error) {
       console.error("Google sign in error:", error)
     } finally {

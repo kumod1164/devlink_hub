@@ -25,7 +25,11 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ user: newUser }, { status: 201 });
+    return NextResponse.json({
+      id: newUser.id,
+      email: newUser.email,
+      name: newUser.name,
+    });
   } catch (err) {
     console.error("Register error:", err);
     return NextResponse.json({ error: "Server error. Please try again." }, { status: 500 });

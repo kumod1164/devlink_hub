@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Github } from "lucide-react"
+import { signIn } from "next-auth/react"
 
 export default function GithubSignInButton() {
   const [isLoading, setIsLoading] = useState(false)
@@ -9,10 +10,7 @@ export default function GithubSignInButton() {
   const handleSignIn = async () => {
     try {
       setIsLoading(true)
-      // Here you would implement GitHub OAuth
-      console.log("GitHub sign in clicked")
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await signIn("github", { callbackUrl: "/console" });
     } catch (error) {
       console.error("GitHub sign in error:", error)
     } finally {

@@ -80,7 +80,7 @@ export default function AuthPage() {
         setMessage("Login successful. Redirecting...");
         window.location.href = res.url || "/console";
       } else {
-        setMessage("Invalid email or password.");
+        setMessage("Invalid email or password. Or you are not registered.");
       }
     } else {
       // 👉 SIGNUP FLOW
@@ -197,7 +197,7 @@ export default function AuthPage() {
         </div>
 
         <div className="relative z-10 text-sm text-teal-100">
-          © {new Date().getFullYear()} DevLink Hub. All rights reserved.
+          &copy; {new Date().getFullYear()} DevLink Hub. All rights reserved.
         </div>
       </div>
 
@@ -237,166 +237,172 @@ export default function AuthPage() {
             </div>
 
             <div className="space-y-4">
-              <AnimatePresence mode="wait">
-                {!isLogin && (
-                  <motion.div
-                    key="name-field"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="space-y-2"
-                  >
-                    <Label htmlFor="name" className="text-slate-700 font-medium">
-                      Full Name
-                    </Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="John Doe"
-                        className="pl-10 bg-white border-slate-200 focus-visible:ring-teal-500"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-700 font-medium">
-                  Email Address
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    className={cn(
-                      "pl-10 bg-white border-slate-200 focus-visible:ring-teal-500",
-                      emailError && "border-red-500 focus-visible:ring-red-500",
-                    )}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value)
-                      if (emailError) validateEmail(e.target.value)
-                    }}
-                  />
-                </div>
-                {emailError && (
-                  <p className="text-red-500 text-sm flex items-center mt-1">
-                    <XCircle className="h-4 w-4 mr-1" />
-                    {emailError}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <Label htmlFor="password" className="text-slate-700 font-medium">
-                    Password
-                  </Label>
-                  {isLogin && (
-                    <Link
-                      href="/auth/forgot-password"
-                      className="text-sm text-teal-600 hover:text-teal-700 font-medium"
-                    >
-                      Forgot?
-                    </Link>
-                  )}
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder={isLogin ? "Your password" : "Create a password"}
-                    className={cn(
-                      "pl-10 pr-10 bg-white border-slate-200 focus-visible:ring-teal-500",
-                      passwordError && "border-red-500 focus-visible:ring-red-500",
-                    )}
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value)
-                      if (passwordError) validatePassword(e.target.value)
-                    }}
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-                {passwordError && (
-                  <p className="text-red-500 text-sm flex items-center mt-1">
-                    <XCircle className="h-4 w-4 mr-1" />
-                    {passwordError}
-                  </p>
-                )}
-
-                <AnimatePresence>
-                  {!isLogin && password.length > 0 && (
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}>
+                <AnimatePresence mode="wait">
+                  {!isLogin && (
                     <motion.div
+                      key="name-field"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="mt-2"
+                      transition={{ duration: 0.2 }}
+                      className="space-y-2"
                     >
-                      <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div
-                          className={cn("h-full transition-all duration-300", getPasswordStrengthColor())}
-                          style={{ width: `${passwordStrength() * 25}%` }}
-                        ></div>
-                      </div>
-                      <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-slate-500">
-                        <div className="flex items-center">
-                          {password.length >= 8 ? (
-                            <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
-                          ) : (
-                            <XCircle className="h-3 w-3 mr-1 text-slate-400" />
-                          )}
-                          <span>8+ characters</span>
-                        </div>
-                        <div className="flex items-center">
-                          {/[A-Z]/.test(password) ? (
-                            <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
-                          ) : (
-                            <XCircle className="h-3 w-3 mr-1 text-slate-400" />
-                          )}
-                          <span>Uppercase</span>
-                        </div>
-                        <div className="flex items-center">
-                          {/[0-9]/.test(password) ? (
-                            <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
-                          ) : (
-                            <XCircle className="h-3 w-3 mr-1 text-slate-400" />
-                          )}
-                          <span>Number</span>
-                        </div>
-                        <div className="flex items-center">
-                          {/[^A-Za-z0-9]/.test(password) ? (
-                            <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
-                          ) : (
-                            <XCircle className="h-3 w-3 mr-1 text-slate-400" />
-                          )}
-                          <span>Special char</span>
-                        </div>
+                      <Label htmlFor="name" className="text-slate-700 font-medium">
+                        Full Name
+                      </Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                        <Input
+                          id="name"
+                          type="text"
+                          placeholder="John Doe"
+                          className="pl-10 bg-white border-slate-200 focus-visible:ring-teal-500"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
 
-              <Button
-                onClick={handleSubmit}
-              >
-                {isLogin ? "Log In" : "Create Account"}
-              </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-slate-700 font-medium">
+                    Email Address
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      className={cn(
+                        "pl-10 bg-white border-slate-200 focus-visible:ring-teal-500",
+                        emailError && "border-red-500 focus-visible:ring-red-500",
+                      )}
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value)
+                        if (emailError) validateEmail(e.target.value)
+                      }}
+                    />
+                  </div>
+                  {emailError && (
+                    <p className="text-red-500 text-sm flex items-center mt-1">
+                      <XCircle className="h-4 w-4 mr-1" />
+                      {emailError}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <Label htmlFor="password" className="text-slate-700 font-medium">
+                      Password
+                    </Label>
+                    {isLogin && (
+                      <Link
+                        href="/auth/forgot-password"
+                        className="text-sm text-teal-600 hover:text-teal-700 font-medium"
+                      >
+                        Forgot?
+                      </Link>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder={isLogin ? "Your password" : "Create a password"}
+                      className={cn(
+                        "pl-10 pr-10 bg-white border-slate-200 focus-visible:ring-teal-500",
+                        passwordError && "border-red-500 focus-visible:ring-red-500",
+                      )}
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value)
+                        if (passwordError) validatePassword(e.target.value)
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                  {passwordError && (
+                    <p className="text-red-500 text-sm flex items-center mt-1">
+                      <XCircle className="h-4 w-4 mr-1" />
+                      {passwordError}
+                    </p>
+                  )}
+
+                  <AnimatePresence>
+                    {!isLogin && password.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-2"
+                      >
+                        <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className={cn("h-full transition-all duration-300", getPasswordStrengthColor())}
+                            style={{ width: `${passwordStrength() * 25}%` }}
+                          ></div>
+                        </div>
+                        <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-slate-500">
+                          <div className="flex items-center">
+                            {password.length >= 8 ? (
+                              <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
+                            ) : (
+                              <XCircle className="h-3 w-3 mr-1 text-slate-400" />
+                            )}
+                            <span>8+ characters</span>
+                          </div>
+                          <div className="flex items-center">
+                            {/[A-Z]/.test(password) ? (
+                              <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
+                            ) : (
+                              <XCircle className="h-3 w-3 mr-1 text-slate-400" />
+                            )}
+                            <span>Uppercase</span>
+                          </div>
+                          <div className="flex items-center">
+                            {/[0-9]/.test(password) ? (
+                              <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
+                            ) : (
+                              <XCircle className="h-3 w-3 mr-1 text-slate-400" />
+                            )}
+                            <span>Number</span>
+                          </div>
+                          <div className="flex items-center">
+                            {/[^A-Za-z0-9]/.test(password) ? (
+                              <CheckCircle2 className="h-3 w-3 mr-1 text-green-500" />
+                            ) : (
+                              <XCircle className="h-3 w-3 mr-1 text-slate-400" />
+                            )}
+                            <span>Special char</span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? (isLogin ? "Logging in..." : "Creating account...") : (isLogin ? "Log In" : "Create Account")}
+                </Button>
+              </form>
             </div>
 
             <div className="mt-6">
