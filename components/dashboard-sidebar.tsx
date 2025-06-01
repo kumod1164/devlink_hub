@@ -131,7 +131,7 @@ export default function DashboardSidebar({ onMobileMenuToggle }: DashboardSideba
   return (
     <div
       className={cn(
-        "fixed inset-y-0 left-0 z-30 flex flex-col bg-white border-r border-slate-200 transition-all duration-300 hidden md:flex",
+        "fixed inset-y-0 left-0 z-30 flex flex-col bg-white border-r border-slate-200 transition-all duration-300  md:flex",
         collapsed ? "w-16" : "w-64",
       )}
     >
